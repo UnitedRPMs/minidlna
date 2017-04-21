@@ -1,16 +1,22 @@
+%global gitdate 20170421
+%global commit0 d1cd7c7a4a4bcceb11f7e285324a148e8034e2d7
+%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
+%global gver .%{gitdate}git%{shortcommit0}
+
 Name:           minidlna
-Version:        1.1.5
-Release:        6%{?dist}
+Version:        1.1.6
+Release:        1%{?dist}
 Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 
 Group:          System Environment/Daemons
 License:        GPLv2 
 URL:            http://sourceforge.net/projects/minidlna/
-Source0:        http://downloads.sourceforge.net/%{name}/%{version}/%{name}-%{version}.tar.gz
+Source0:	https://sourceforge.net/code-snapshots/git/m/mi/minidlna/git.git/%{name}-git-%{commit0}.zip#/%{name}-%{shortcommit0}.tar.gz
 # Systemd unit file
 Source1:        %{name}.service
 # tmpfiles configuration for the /run directory
 Source2:        %{name}-tmpfiles.conf 
+Source3:	minidlna.sysusers
 
 BuildRequires:  libuuid-devel
 BuildRequires:  ffmpeg-devel
@@ -22,6 +28,7 @@ BuildRequires:  libjpeg-devel
 BuildRequires:  libexif-devel
 BuildRequires:  gettext
 BuildRequires:  systemd-units
+BuildRequires:	gettext-devel
 Requires(pre):  shadow-utils
 Requires(post): systemd-units
 Requires(preun): systemd-units
@@ -38,7 +45,7 @@ and televisions.
 
 
 %prep
-%setup -q
+%autosetup -n %{name}-git-%{commit0}   
 
 # Edit the default config file 
 sed -i 's/#log_dir=\/var\/log/#log_dir=\/var\/log\/minidlna/' \
@@ -46,6 +53,7 @@ sed -i 's/#log_dir=\/var\/log/#log_dir=\/var\/log\/minidlna/' \
 
 
 %build
+[ -x configure ] || ./autogen.sh
 %configure \
   --disable-silent-rules \
   --with-db-path=%{_localstatedir}/cache/%{name} \
@@ -64,7 +72,7 @@ install -m 644 minidlna.conf %{buildroot}%{_sysconfdir}
 
 # Install systemd unit file
 mkdir -p %{buildroot}%{_unitdir}
-install -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
+install -m 644 %{S:1} %{buildroot}%{_unitdir}
 
 # Install man pages
 mkdir -p %{buildroot}%{_mandir}/man5
@@ -74,7 +82,7 @@ install -m 644 minidlnad.8 %{buildroot}%{_mandir}/man8/
 
 # Install tmpfiles configuration
 mkdir -p %{buildroot}%{_tmpfilesdir}
-install -m 0644 %{SOURCE2} %{buildroot}%{_tmpfilesdir}/%{name}.conf
+install -m 0644 %{S:2} %{buildroot}%{_tmpfilesdir}/%{name}.conf
 mkdir -p %{buildroot}/run/
 install -d -m 0755 %{buildroot}/run/%{name}/
 
@@ -83,6 +91,9 @@ mkdir -p %{buildroot}%{_localstatedir}/cache
 install -d -m 0755 %{buildroot}%{_localstatedir}/cache/%{name}/
 mkdir -p %{buildroot}%{_localstatedir}/log
 install -d -m 0755 %{buildroot}%{_localstatedir}/log/%{name}/
+
+# Sys users
+install -Dm0644 %{S:3} %{buildroot}/%{_sysusersdir}/minidlna.conf
 
 %find_lang %{name}
 
@@ -94,6 +105,7 @@ useradd -r -g minidlna -d /dev/null -s /sbin/nologin \
   -c "minidlna service account" minidlna
 exit 0
 
+echo "-- minidlna uses minidlna/minidlna user/group now,"
 
 %post
 if [ $1 -eq 1 ] ; then 
@@ -117,11 +129,14 @@ if [ $1 -ge 1 ] ; then
     /bin/systemctl try-restart %{name}.service >/dev/null 2>&1 || :
 fi
 
+echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
+
 
 %files -f %{name}.lang
 %attr(-,minidlna,minidlna) %config(noreplace) %{_sysconfdir}/minidlna.conf
 %{_sbindir}/minidlnad
 %{_unitdir}/minidlna.service
+%{_sysusersdir}/minidlna.conf
 %{_mandir}/man5/%{name}.conf.5*
 %{_mandir}/man8/minidlnad.8*
 %dir %attr(-,minidlna,minidlna) /run/%{name}
@@ -132,6 +147,9 @@ fi
 
 
 %changelog
+
+* Fri Apr 21 2017 David Vásquez <davidjeremias82 AT gmail DOT com> - 1.1.6-1
+- Updated to 1.1.6-1
 
 * Tue Apr 18 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.1.5-6  
 - Automatic Mass Rebuild
