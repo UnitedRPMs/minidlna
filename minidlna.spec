@@ -17,6 +17,9 @@ Source1:        %{name}.service
 # tmpfiles configuration for the /run directory
 Source2:        %{name}-tmpfiles.conf 
 Source3:	minidlna.sysusers
+# Patches from Ubuntu
+# Avoid reading uninitialized memory on malicious HTTP requests.
+Patch:		11-http-parse.patch
 
 BuildRequires:  libuuid-devel
 BuildRequires:  ffmpeg-devel
@@ -45,7 +48,7 @@ and televisions.
 
 
 %prep
-%autosetup -n %{name}-git-%{commit0}   
+%autosetup -n %{name}-git-%{commit0} -p1   
 
 # Edit the default config file 
 sed -i 's/#log_dir=\/var\/log/#log_dir=\/var\/log\/minidlna/' \
