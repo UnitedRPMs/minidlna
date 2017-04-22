@@ -1,5 +1,5 @@
 %global gitdate 20170421
-%global commit0 d1cd7c7a4a4bcceb11f7e285324a148e8034e2d7
+%global commit0 8a996b4b624ef45538a5de10730b8e94c55e7768
 %global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
 %global gver .%{gitdate}git%{shortcommit0}
 
@@ -19,7 +19,7 @@ Source2:        %{name}-tmpfiles.conf
 Source3:	minidlna.sysusers
 # Patches from Ubuntu
 # Avoid reading uninitialized memory on malicious HTTP requests.
-Patch:		11-http-parse.patch
+# Patch:		11-http-parse.patch
 
 BuildRequires:  libuuid-devel
 BuildRequires:  ffmpeg-devel
@@ -48,7 +48,7 @@ and televisions.
 
 
 %prep
-%autosetup -n %{name}-git-%{commit0} -p1   
+%autosetup -n %{name}-git-%{commit0}   
 
 # Edit the default config file 
 sed -i 's/#log_dir=\/var\/log/#log_dir=\/var\/log\/minidlna/' \
