@@ -11,7 +11,7 @@ Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 Group:          System Environment/Daemons
 License:        GPLv2 
 URL:            http://sourceforge.net/projects/minidlna/
-Source0:	https://sourceforge.net/code-snapshots/git/m/mi/minidlna/git.git/%{name}-git-%{commit0}.zip
+Source0:	https://sourceforge.net/code-snapshots/git/m/mi/minidlna/git.git/%{name}-git-%{commit0}.zip#/%{name}-%{shortcommit0}.tar.gz
 # Systemd unit file
 Source1:        %{name}.service
 # tmpfiles configuration for the /run directory
