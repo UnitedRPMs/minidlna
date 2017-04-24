@@ -5,7 +5,7 @@
 
 Name:           minidlna
 Version:        1.1.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 
 Group:          System Environment/Daemons
@@ -150,6 +150,9 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 
 
 %changelog
+
+* Mon Apr 24 2017 David Vásquez <davidjeremias82 AT gmail DOT com> - 1.1.6-2
+- Reverted service changed
 
 * Fri Apr 21 2017 David Vásquez <davidjeremias82 AT gmail DOT com> - 1.1.6-1
 - Updated to 1.1.6-1
