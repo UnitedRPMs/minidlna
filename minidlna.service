@@ -3,14 +3,10 @@ Description=MiniDLNA is a DLNA/UPnP-AV server software
 After=syslog.target local-fs.target network.target
 
 [Service]
-Type=simple
 User=minidlna
 Group=minidlna
-ExecStart=/usr/bin/minidlnad -S
-ProtectSystem=full
-ProtectHome=on
-PrivateDevices=on
-NoNewPrivileges=on
+Type=simple
+ExecStart=/usr/sbin/minidlnad -S
 
 [Install]
 WantedBy=multi-user.target
