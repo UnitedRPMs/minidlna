@@ -17,10 +17,7 @@ Source1:        %{name}.service
 # tmpfiles configuration for the /run directory
 Source2:        %{name}-tmpfiles.conf 
 Source3:	minidlna.sysusers
-# Patches from Debian 
-# https://anonscm.debian.org/git/collab-maint/minidlna.git/tree/
-# AVStream will no longer have a AVCodecContext reference after libavformat major version 57.
-Patch:		12-libavformat-57.patch
+Patch:		minidlna_vdr.patch
 
 BuildRequires:  libuuid-devel
 BuildRequires:  ffmpeg-devel
@@ -33,6 +30,8 @@ BuildRequires:  libexif-devel
 BuildRequires:  gettext
 BuildRequires:  systemd-units
 BuildRequires:	gettext-devel
+BuildRequires:	autoconf
+BuildRequires:	redhat-release
 Requires(pre):  shadow-utils
 Requires(post): systemd-units
 Requires(preun): systemd-units
@@ -51,13 +50,21 @@ and televisions.
 %prep
 %autosetup -n %{name}-git-%{commit0} -p1   
 
+
+%build
+[ -x configure ] || ./autogen.sh
+
 # Edit the default config file 
 sed -i 's/#log_dir=\/var\/log/#log_dir=\/var\/log\/minidlna/' \
   %{name}.conf
 
+# I am not sure it the macro works...
+%ifarch x86_64
+sed -i 's|LDFLAGS="$LDFLAGS -L$dir/lib"|LDFLAGS="$LDFLAGS -L$dir/lib64"|g' configure
+%endif
+sed -i 's|/usr/local|/usr|g' configure
 
-%build
-[ -x configure ] || ./autogen.sh
+export PKG_CONFIG_PATH=%{_libdir}/pkgconfig:$PKG_CONFIG_PATH
 %configure \
   --disable-silent-rules \
   --with-db-path=%{_localstatedir}/cache/%{name} \
