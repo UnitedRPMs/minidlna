@@ -1,17 +1,12 @@
-%global gitdate 20170421
-%global commit0 8a996b4b624ef45538a5de10730b8e94c55e7768
-%global shortcommit0 %(c=%{commit0}; echo ${c:0:7})
-%global gver .%{gitdate}git%{shortcommit0}
-
 Name:           minidlna
-Version:        1.1.6
-Release:        2%{?dist}
+Version:        1.2.0
+Release:        1%{?dist}
 Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 
 Group:          System Environment/Daemons
 License:        GPLv2 
 URL:            http://sourceforge.net/projects/minidlna/
-Source0:	https://sourceforge.net/code-snapshots/git/m/mi/minidlna/git.git/%{name}-git-%{commit0}.zip#/%{name}-%{shortcommit0}.tar.gz
+Source0:	https://sourceforge.net/projects/minidlna/files/minidlna/%{version}/minidlna-%{version}.tar.gz
 # Systemd unit file
 Source1:        %{name}.service
 # tmpfiles configuration for the /run directory
@@ -48,7 +43,7 @@ and televisions.
 
 
 %prep
-%autosetup -n %{name}-git-%{commit0} -p1   
+%autosetup -n %{name}-%{version} -p1   
 
 
 %build
@@ -158,6 +153,9 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 
 
 %changelog
+
+* Sat May 27 2017 David Vásquez <davidjeremias82 AT gmail DOT com> - 1.2.0-1
+- Updated to 1.2.0-1
 
 * Mon Apr 24 2017 David Vásquez <davidjeremias82 AT gmail DOT com> - 1.1.6-2
 - Reverted service changed
