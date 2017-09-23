@@ -1,5 +1,5 @@
 Name:           minidlna
-Version:        1.2.0
+Version:        1.2.1
 Release:        1%{?dist}
 Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 
@@ -11,8 +11,8 @@ Source0:	https://sourceforge.net/projects/minidlna/files/minidlna/%{version}/min
 Source1:        %{name}.service
 # tmpfiles configuration for the /run directory
 Source2:        %{name}-tmpfiles.conf 
-Source3:	minidlna.sysusers
-Patch:		minidlna_vdr.patch
+# VDR FIX thanks to Boris from openSuse
+Patch:		minidlna-vdr.diff
 
 BuildRequires:  libuuid-devel
 BuildRequires:  ffmpeg-devel
@@ -27,10 +27,12 @@ BuildRequires:  systemd-units
 BuildRequires:	gettext-devel
 BuildRequires:	autoconf
 BuildRequires:	redhat-release
+BuildRequires:  avahi-devel
+BuildRequires:  systemd
+
 Requires(pre):  shadow-utils
-Requires(post): systemd-units
-Requires(preun): systemd-units
-Requires(postun): systemd-units
+%{?systemd_requires}
+
 
 %description
 MiniDLNA (aka ReadyDLNA) is server software with the aim of being fully 
@@ -43,7 +45,7 @@ and televisions.
 
 
 %prep
-%autosetup -n %{name}-%{version} -p1   
+%autosetup -n %{name}-%{version} -p0   
 
 
 %build
@@ -98,8 +100,6 @@ install -d -m 0755 %{buildroot}%{_localstatedir}/cache/%{name}/
 mkdir -p %{buildroot}%{_localstatedir}/log
 install -d -m 0755 %{buildroot}%{_localstatedir}/log/%{name}/
 
-# Sys users
-install -Dm0644 %{S:3} %{buildroot}/%{_sysusersdir}/minidlna.conf
 
 %find_lang %{name}
 
@@ -111,21 +111,17 @@ useradd -r -g minidlna -d /dev/null -s /sbin/nologin \
   -c "minidlna service account" minidlna
 exit 0
 
-echo "-- minidlna uses minidlna/minidlna user/group now,"
 
 %post
-if [ $1 -eq 1 ] ; then 
-    # Initial installation 
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
+%systemd_post %{name}.service
 
 
 %preun
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /bin/systemctl --no-reload disable %{name}.service > /dev/null 2>&1 || :
-    /bin/systemctl stop %{name}.service > /dev/null 2>&1 || :
-fi
+%systemd_preun %{name}.service
+
+
+%postun
+%systemd_postun_with_restart %{name}.service
 
 
 %postun
@@ -142,7 +138,6 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 %attr(-,minidlna,minidlna) %config(noreplace) %{_sysconfdir}/minidlna.conf
 %{_sbindir}/minidlnad
 %{_unitdir}/minidlna.service
-%{_sysusersdir}/minidlna.conf
 %{_mandir}/man5/%{name}.conf.5*
 %{_mandir}/man8/minidlnad.8*
 %dir %attr(-,minidlna,minidlna) /run/%{name}
@@ -153,6 +148,9 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 
 
 %changelog
+
+* Fri Sep 22 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.2.1-1
+- Updated to 1.2.1-1
 
 * Sat May 27 2017 David Vásquez <davidjeremias82 AT gmail DOT com> - 1.2.0-1
 - Updated to 1.2.0-1
