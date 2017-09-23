@@ -122,15 +122,6 @@ exit 0
 
 %postun
 %systemd_postun_with_restart %{name}.service
-
-
-%postun
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-    # Package upgrade, not uninstall
-    /bin/systemctl try-restart %{name}.service >/dev/null 2>&1 || :
-fi
-
 echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 
 
