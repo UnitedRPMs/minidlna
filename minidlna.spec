@@ -1,6 +1,6 @@
 Name:           minidlna
 Version:        1.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 
 Group:          System Environment/Daemons
@@ -140,6 +140,9 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 
 %changelog
 
+* Wed Oct 18 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.2.1-2  
+- Automatic Mass Rebuild
+
 * Fri Sep 22 2017 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.2.1-1
 - Updated to 1.2.1-1
 
@@ -247,4 +250,3 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 * Sat Jun 18 2011 Andrea Musuruane <musuruan@gmail.com> 1.0.20-1
 - First release
 - Used Debian man pages
-
