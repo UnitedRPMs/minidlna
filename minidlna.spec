@@ -29,6 +29,7 @@ BuildRequires:	autoconf
 BuildRequires:	redhat-release
 BuildRequires:  avahi-devel
 BuildRequires:  systemd
+BuildRequires:  gcc-c++
 
 Requires(pre):  shadow-utils
 %{?systemd_requires}
