@@ -1,6 +1,8 @@
+%define _legacy_common_support 1
+
 Name:           minidlna
 Version:        1.2.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 
 Group:          System Environment/Daemons
@@ -140,6 +142,9 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 
 
 %changelog
+
+* Sun May 03 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.2.1-5
+- Rebuilt   
 
 * Thu Dec 06 2018 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.2.1-4
 - Rebuilt for ffmpeg  
