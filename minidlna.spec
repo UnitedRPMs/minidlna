@@ -2,7 +2,7 @@
 
 Name:           minidlna
 Version:        1.2.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 
 Group:          System Environment/Daemons
@@ -17,7 +17,7 @@ Source2:        %{name}-tmpfiles.conf
 Patch:		minidlna-vdr.diff
 
 BuildRequires:  libuuid-devel
-BuildRequires:  ffmpeg-devel >= 4.1
+BuildRequires:  ffmpeg-devel >= 4.3
 BuildRequires:  sqlite-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  flac-devel
@@ -142,6 +142,9 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 
 
 %changelog
+
+* Tue Jun 23 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.2.1-6
+- Rebuilt for ffmpeg
 
 * Sun May 03 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.2.1-5
 - Rebuilt   
