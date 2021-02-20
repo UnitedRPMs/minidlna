@@ -1,7 +1,8 @@
+%global _lto_cflags %{nil}
 %define _legacy_common_support 1
 
 Name:           minidlna
-Version:        1.2.1
+Version:        1.3.0
 Release:        6%{?dist}
 Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 
@@ -14,25 +15,23 @@ Source1:        %{name}.service
 # tmpfiles configuration for the /run directory
 Source2:        %{name}-tmpfiles.conf 
 # VDR FIX thanks to Boris from openSuse
-Patch:		minidlna-vdr.diff
+#Patch:		minidlna-vdr.diff
 
-BuildRequires:  libuuid-devel
 BuildRequires:  ffmpeg-devel >= 4.3
+BuildRequires:  make
+BuildRequires:  gcc
+BuildRequires:  avahi-devel
+BuildRequires:  libuuid-devel
+BuildRequires:  ffmpeg-devel
 BuildRequires:  sqlite-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  flac-devel
 BuildRequires:  libid3tag-devel
 BuildRequires:  libjpeg-devel
 BuildRequires:  libexif-devel
+BuildRequires:  zlib-devel
 BuildRequires:  gettext
-BuildRequires:  systemd-units
-BuildRequires:	gettext-devel
-BuildRequires:	autoconf
-BuildRequires:	redhat-release
-BuildRequires:  avahi-devel
 BuildRequires:  systemd
-BuildRequires:  gcc-c++
-
 Requires(pre):  shadow-utils
 %{?systemd_requires}
 
@@ -50,8 +49,8 @@ and televisions.
 %prep
 %autosetup -n %{name}-%{version} -p0   
 
-
 %build
+
 [ -x configure ] || ./autogen.sh
 
 # Edit the default config file 
@@ -64,18 +63,18 @@ sed -i 's|LDFLAGS="$LDFLAGS -L$dir/lib"|LDFLAGS="$LDFLAGS -L$dir/lib64"|g' confi
 %endif
 sed -i 's|/usr/local|/usr|g' configure
 
-export PKG_CONFIG_PATH=%{_libdir}/pkgconfig:$PKG_CONFIG_PATH
+
 %configure \
   --disable-silent-rules \
   --with-db-path=%{_localstatedir}/cache/%{name} \
   --with-log-path=%{_localstatedir}/log/%{name} \
   --enable-tivo
 
-make %{?_smp_mflags} 
+%make_build 
 
 
 %install
-make install DESTDIR=%{buildroot}
+%make_install
 
 # Install config file
 mkdir -p %{buildroot}%{_sysconfdir}
@@ -142,6 +141,9 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 
 
 %changelog
+
+* Mon Feb 15 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.3.0-6
+- Updated to 1.3.0
 
 * Tue Jun 23 2020 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.2.1-6
 - Rebuilt for ffmpeg
