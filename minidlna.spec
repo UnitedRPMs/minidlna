@@ -3,7 +3,7 @@
 
 Name:           minidlna
 Version:        1.3.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 
 Group:          System Environment/Daemons
@@ -14,8 +14,8 @@ Source0:	https://sourceforge.net/projects/minidlna/files/minidlna/%{version}/min
 Source1:        %{name}.service
 # tmpfiles configuration for the /run directory
 Source2:        %{name}-tmpfiles.conf 
-# VDR FIX thanks to Boris from openSuse
-#Patch:		minidlna-vdr.diff
+
+Patch:		select_use_after_free.patch
 
 BuildRequires:  ffmpeg-devel >= 4.3
 BuildRequires:  make
@@ -47,7 +47,7 @@ and televisions.
 
 
 %prep
-%autosetup -n %{name}-%{version} -p0   
+%autosetup -n %{name}-%{version} -p1   
 
 %build
 
@@ -141,6 +141,9 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 
 
 %changelog
+
+* Sat Mar 20 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.3.0-7
+- Fix thanks to Dominik Hassler https://sourceforge.net/p/minidlna/bugs/333/
 
 * Mon Feb 15 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.3.0-6
 - Updated to 1.3.0

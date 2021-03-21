@@ -1,0 +1,11 @@
+diff -ruN orig/select.c new/select.c
+--- orig/select.c	2020-11-24 12:53:50.000000000 -0600
++++ new/select.c	2021-03-21 01:25:20.401488385 -0600
+@@ -83,6 +83,7 @@
+ 
+ 	free(events);
+ 	events = NULL;
++	nevents = 0;
+ }
+ 
+ static int
