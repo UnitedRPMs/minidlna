@@ -3,7 +3,7 @@
 
 Name:           minidlna
 Version:        1.3.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Lightweight DLNA/UPnP-AV server targeted at embedded systems
 
 Group:          System Environment/Daemons
@@ -17,12 +17,11 @@ Source2:        %{name}-tmpfiles.conf
 
 Patch:		select_use_after_free.patch
 
-BuildRequires:  ffmpeg-devel >= 4.3
+BuildRequires:  ffmpeg-devel >= 5.0
 BuildRequires:  make
 BuildRequires:  gcc
 BuildRequires:  avahi-devel
 BuildRequires:  libuuid-devel
-BuildRequires:  ffmpeg-devel
 BuildRequires:  sqlite-devel
 BuildRequires:  libvorbis-devel
 BuildRequires:  flac-devel
@@ -141,6 +140,9 @@ echo "-- needs manual intervention in /var/cache/minidlna and /run/minidlna!"
 
 
 %changelog
+
+* Wed Feb 02 2022 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.3.0-8
+- Rebuilt for ffmpeg
 
 * Sat Mar 20 2021 Unitedrpms Project <unitedrpms AT protonmail DOT com> 1.3.0-7
 - Fix thanks to Dominik Hassler https://sourceforge.net/p/minidlna/bugs/333/
